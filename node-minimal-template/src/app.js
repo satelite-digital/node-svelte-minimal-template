@@ -8,11 +8,14 @@ const cors = require('cors')
 
 
 const app = express();
+
 app.use(cors())
+
 
 // Parse json encoded in the request body
 app.use(bodyParser.json({ limit: '50mb' }));
 
+app.use('/public', express.static(`../svelte-minimal-template/public`))
 // allow cors from all - no hustle and never safe
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

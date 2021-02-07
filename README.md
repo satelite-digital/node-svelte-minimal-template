@@ -314,7 +314,7 @@ Or even something like
 
 By following the process previously described I used a blank project template I developed with minimal UI requirements.
 
-This was achieved with the following `instantcode.config.js`:
+This was achieved by only adding some HandlebarsJS directives to `5` files int he source code, and the following `instantcode.config.js`:
 
 ```
 const explodeSchemaId = require("./.instantcode/plugins/explodeSchemaId.plugin");
@@ -357,11 +357,21 @@ const main = async ()=>{
 
 module.exports = main()
 ```
-You'll find all the files in the template repository at the end of this article.   Also since I almost ran out of time expect to find some spaghetti code and minor bugs 🙇‍♂️
+
+If you want to enable further customizations, you can do something like this to get a different UI for some schemas
+
+
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1612669566621/xKm3LXY-M.png)
+
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1612669609050/zW_tx09Iq.png)
+
+This will need some custom plugin to create some booleans for us to use in the templates as shown above.
+
+You'll find all the files in the template repository at the end of this article.   Also since I almost ran out of time expect to find some ugly code and maybe some minor bugs 🙇‍♂️ will be updating soon.
 
 #### Creating a basic API template
 
-I wanted a backend template that requires as little configuration as possible.  Meaning that once you described your application you shouldn't need to do anything else to start using your new API.
+I wanted a backend template that required as little configuration as possible.  Meaning that once you described your application you shouldn't need to do anything else to start using your new API.
 
 So I ended up with the following `instantcode.config.js`:
 
@@ -471,8 +481,32 @@ model app {
 
 ```
 
-When you run the project with a PostgreSQL database, once you build and run the project you should get a database like this:
+If you run this project locally you'll need the following .env file placed at the root of the `node-minimal-template` folder.
 
+```
+SERVER_PROTOCOL=http
+SERVER_PORT=3001
+SERVER_HOST=localhost
+
+CLIENT_PROTOCOL=http
+CLIENT_PORT=5000
+CLIENT_HOST=localhost
+
+JWT_KEY=something_private_and_long_enough_to_secure
+
+# For the Github oAuth integration (PassportJS)
+GITHUB_CLIENT_ID=XXXXXXXXXXXXXXXXX
+GITHUB_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+# For the Google oAuth integration (PassportJS)
+GOOGLE_CLIENT_ID=-XXXXXXXXXXXXXXXX.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXX
+
+# PostgreSQL 
+DATABASE_URL="postgresql://user:password@host:port/db?schema=public"
+```
+
+When you deploy the project, once you build and run you should get a database like this:
 
 ![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1612641925064/lJZ2cGl0-.png)
 
@@ -485,6 +519,107 @@ Now, I want both my backend and frontend to share the same `instantcode.schema.j
 Also, since I want them both to be generated at build time, it would be best if the root folder has its own `instantcode.config.js` which combines the configurations from both projects:
 
 ```
+const explodeSchemaId = require("./svelte-minimal-template/.instantcode/plugins/explodeSchemaId.plugin");
+const examplePlugin = require("./node-minimal-template/.instantcode/plugins/example.plugin");
+
+const main = async ()=>{
+
+  let config = {
+    "data" : require('./instantcode.schema.json'),
+    "fileTemplates" : [
+      {
+        "src" : "./svelte-minimal-template/.instantcode/files/page/page.svelte",
+        "dest" : "./svelte-minimal-template/src/app/pages/[id]/[id].page.svelte",
+        "key" : "schema"
+      },
+      {
+        "src" : "./svelte-minimal-template/.instantcode/files/page/datatable.partial.svelte",
+        "dest" : "./svelte-minimal-template/src/app/pages/[id]/datatable.partial.svelte",
+        "key" : "schema"
+      },
+      {
+        "src" : "./svelte-minimal-template/.instantcode/files/entity.service.js",
+        "dest" : "./svelte-minimal-template/src/app/services/client/[id].service.js",
+        "key" : "schema"
+      },
+      {
+        "src" : "./svelte-minimal-template/.instantcode/files/client.index.js",
+        "dest" : "./svelte-minimal-template/src/app/services/client/index.js"
+      },
+      {
+        "src" : "./svelte-minimal-template/.instantcode/files/pages.index.js",
+        "dest" : "./svelte-minimal-template/src/app/pages/index.js"
+      },
+      {
+        "src" : "./svelte-minimal-template/.instantcode/files/routes.index.js",
+        "dest" : "./svelte-minimal-template/src/app/routes/index.js"
+      },
+      {
+        "src" : "./svelte-minimal-template/.instantcode/files/components/Aside.svelte",
+        "dest" : "./svelte-minimal-template/src/app/components/molecules/Aside.svelte"
+      },
+      {
+        "src" : "./node-minimal-template/.instantcode/files/service.js",
+        "dest" : "./node-minimal-template/src/services/[id].js",
+        "key" : "schema"
+      },
+      {
+        "src" : "./node-minimal-template/.instantcode/files/route.js",
+        "dest" : "./node-minimal-template/src/routes/[id].js",
+        "key" : "schema"
+      },
+      {
+        "src" : "./node-minimal-template/.instantcode/files/app.js",
+        "dest" : "./node-minimal-template/src/app.js"
+      },
+      {
+        "src" : "./node-minimal-template/.instantcode/files/schema.prisma",
+        "dest" : "./node-minimal-template/prisma/schema.prisma"
+      }
+    ]
+  }
+
+
+// ⚠ Do not do this at home, I ran out of time for the Hackathon 👇
+  
+
+  
+  for(schema in config.data.schema){
+    if(config.data.schema[schema].id == 'user'){
+      config.data.schema[schema].fields.push({
+        id : 'oAuthId',
+        type : 'String',
+        options : {
+          optional : true
+        }
+      })
+      config.data.schema[schema].fields.push({
+        id : 'oAuthData',
+        type : 'Json',
+        options : {
+          optional : true
+        }
+      })
+      config.data.schema[schema].isUser = true
+    }
+  }
+  
+
+  config = await explodeSchemaId(config)
+  
+  
+  config = await examplePlugin(config)
+
+
+
+  return config
+
+
+}
+
+module.exports = main()
+
+
 
 ```
 
@@ -506,24 +641,30 @@ The `package.json` includes a `postinstall` hook script to run `instantcode buil
 8. Creating a fullstack template
 9. Making it all work with Vercel
 
-### The results
-
-This is an application that was generated dynamically based on a `JSON` file that lives in the repo:
-
-[]()
-
-Now that you understand the process behind the project, I want to share with you a demo of what can be done.  By clicking on the **Deploy with Vercel** button, you'll get a copy of the source code for the templates developed during the process.
-
 > But Erick, how is this indistinguishable from magic? 🤔
 
-Just click through the deploy process [![Deploy with Vercel](https://vercel.com/button)]()
+### The results
 
-Now change or add some data in your `instantcode.schema.json` file (you can do it directly from the linked repository), push to the repository created for the deployment and watch your app change its database, API and UI in almost real time.
+![image.png](https://cdn.hashnode.com/res/hashnode/image/upload/v1612671843976/vENkGT0_Y.png)
 
+[Go to demo]()
+
+This is an application that was generated dynamically based on a `JSON` file that lives in this repo:
+
+> [Fullstack monorepo](https://github.com/satelite-digital/node-svelte-minimal-
+template)
+
+By simply editing my `instantcode.schema.json` file on the repo I get a redeploy of my application, which will migrate the new schema to the database and rebuild my frontend and backend accordingly.
+
+You'll find a Deploy with Vercel button there in the Github repository but to be able to run that project successfully on Vercel you'll need a hosted PostgreSQL database and some Google and Github  credentials for oAuth integration.
+
+To run a simpler project just to see the magic click through the following:
+
+()[]
 
 ### Next Steps
 
-As you will notice this project is still in a prototype stage, some of the new you can expect from the project:
+As you will notice this project is still in a prototype stage, some of the news you can expect from the project:
 
 - Production ready release
 - Micro-scaffolding: `instantcode add page` (Work in progress)
