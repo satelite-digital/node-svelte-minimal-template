@@ -3394,8 +3394,8 @@ var app = (function () {
 
     function get_each_context(ctx, list, i) {
     	const child_ctx = ctx.slice();
-    	child_ctx[4] = list[i];
-    	child_ctx[6] = i;
+    	child_ctx[5] = list[i];
+    	child_ctx[7] = i;
     	return child_ctx;
     }
 
@@ -3403,33 +3403,30 @@ var app = (function () {
     function create_each_block(ctx) {
     	let li;
     	let p;
-    	let t0_value = /*link*/ ctx[4].display + "";
-    	let t0;
-    	let t1;
+    	let t_value = /*link*/ ctx[5].display + "";
+    	let t;
     	let mounted;
     	let dispose;
 
     	function click_handler() {
-    		return /*click_handler*/ ctx[3](/*link*/ ctx[4]);
+    		return /*click_handler*/ ctx[3](/*link*/ ctx[5]);
     	}
 
     	const block = {
     		c: function create() {
     			li = element("li");
     			p = element("p");
-    			t0 = text(t0_value);
-    			t1 = space();
+    			t = text(t_value);
     			attr_dev(p, "class", "svelte-6x7g3a");
     			add_location(p, file$6, 94, 16, 2072);
     			attr_dev(li, "class", "svelte-6x7g3a");
-    			toggle_class(li, "selected", /*$location*/ ctx[2] === /*link*/ ctx[4].url);
+    			toggle_class(li, "selected", /*$location*/ ctx[2] === /*link*/ ctx[5].url);
     			add_location(li, file$6, 93, 12, 1970);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, li, anchor);
     			append_dev(li, p);
-    			append_dev(p, t0);
-    			append_dev(li, t1);
+    			append_dev(p, t);
 
     			if (!mounted) {
     				dispose = listen_dev(li, "click", click_handler, false, false, false);
@@ -3438,10 +3435,10 @@ var app = (function () {
     		},
     		p: function update(new_ctx, dirty) {
     			ctx = new_ctx;
-    			if (dirty & /*links*/ 1 && t0_value !== (t0_value = /*link*/ ctx[4].display + "")) set_data_dev(t0, t0_value);
+    			if (dirty & /*links*/ 1 && t_value !== (t_value = /*link*/ ctx[5].display + "")) set_data_dev(t, t_value);
 
     			if (dirty & /*$location, links*/ 5) {
-    				toggle_class(li, "selected", /*$location*/ ctx[2] === /*link*/ ctx[4].url);
+    				toggle_class(li, "selected", /*$location*/ ctx[2] === /*link*/ ctx[5].url);
     			}
     		},
     		d: function destroy(detaching) {
@@ -3467,8 +3464,13 @@ var app = (function () {
     	let section;
     	let img;
     	let img_src_value;
-    	let t;
+    	let t0;
     	let ul;
+    	let t1;
+    	let li;
+    	let p;
+    	let mounted;
+    	let dispose;
     	let each_value = /*links*/ ctx[0];
     	validate_each_argument(each_value);
     	let each_blocks = [];
@@ -3482,13 +3484,17 @@ var app = (function () {
     			div = element("div");
     			section = element("section");
     			img = element("img");
-    			t = space();
+    			t0 = space();
     			ul = element("ul");
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].c();
     			}
 
+    			t1 = space();
+    			li = element("li");
+    			p = element("p");
+    			p.textContent = "Log out";
     			attr_dev(img, "width", "75%");
     			attr_dev(img, "margin", "auto");
     			attr_dev(img, "height", "auto");
@@ -3497,6 +3503,10 @@ var app = (function () {
     			add_location(img, file$6, 88, 12, 1761);
     			attr_dev(section, "class", "avatar-holder svelte-6x7g3a");
     			add_location(section, file$6, 87, 8, 1716);
+    			attr_dev(p, "class", "svelte-6x7g3a");
+    			add_location(p, file$6, 98, 16, 2205);
+    			attr_dev(li, "class", "svelte-6x7g3a");
+    			add_location(li, file$6, 97, 12, 2147);
     			attr_dev(ul, "class", "svelte-6x7g3a");
     			add_location(ul, file$6, 91, 8, 1914);
     			attr_dev(div, "class", "aside-container svelte-6x7g3a");
@@ -3510,11 +3520,20 @@ var app = (function () {
     			insert_dev(target, div, anchor);
     			append_dev(div, section);
     			append_dev(section, img);
-    			append_dev(div, t);
+    			append_dev(div, t0);
     			append_dev(div, ul);
 
     			for (let i = 0; i < each_blocks.length; i += 1) {
     				each_blocks[i].m(ul, null);
+    			}
+
+    			append_dev(ul, t1);
+    			append_dev(ul, li);
+    			append_dev(li, p);
+
+    			if (!mounted) {
+    				dispose = listen_dev(li, "click", /*click_handler_1*/ ctx[4], false, false, false);
+    				mounted = true;
     			}
     		},
     		p: function update(ctx, [dirty]) {
@@ -3531,7 +3550,7 @@ var app = (function () {
     					} else {
     						each_blocks[i] = create_each_block(child_ctx);
     						each_blocks[i].c();
-    						each_blocks[i].m(ul, null);
+    						each_blocks[i].m(ul, t1);
     					}
     				}
 
@@ -3551,6 +3570,8 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(div);
     			destroy_each(each_blocks, detaching);
+    			mounted = false;
+    			dispose();
     		}
     	};
 
@@ -3583,6 +3604,10 @@ var app = (function () {
     		push(`#${link.url}`);
     	};
 
+    	const click_handler_1 = () => {
+    		push(`#/logout`);
+    	};
+
     	$$self.$$set = $$props => {
     		if ("links" in $$props) $$invalidate(0, links = $$props.links);
     		if ("style" in $$props) $$invalidate(1, style = $$props.style);
@@ -3606,7 +3631,7 @@ var app = (function () {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [links, style, $location, click_handler];
+    	return [links, style, $location, click_handler, click_handler_1];
     }
 
     class Aside extends SvelteComponentDev {
@@ -9558,96 +9583,19 @@ var app = (function () {
     // (53:1) <section slot="main" >
     function create_main_slot(ctx) {
     	let section;
-    	let switch_instance;
-    	let updating_data;
-    	let current;
-
-    	function switch_instance_data_binding(value) {
-    		/*switch_instance_data_binding*/ ctx[1].call(null, value);
-    	}
-
-    	var switch_value = Datatable_partial;
-
-    	function switch_props(ctx) {
-    		let switch_instance_props = {};
-
-    		if (/*records*/ ctx[0] !== void 0) {
-    			switch_instance_props.data = /*records*/ ctx[0];
-    		}
-
-    		return {
-    			props: switch_instance_props,
-    			$$inline: true
-    		};
-    	}
-
-    	if (switch_value) {
-    		switch_instance = new switch_value(switch_props(ctx));
-    		binding_callbacks.push(() => bind(switch_instance, "data", switch_instance_data_binding));
-    	}
 
     	const block = {
     		c: function create() {
     			section = element("section");
-    			if (switch_instance) create_component(switch_instance.$$.fragment);
+    			section.textContent = "Display another partial component for users";
     			attr_dev(section, "slot", "main");
     			add_location(section, file$c, 52, 1, 884);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, section, anchor);
-
-    			if (switch_instance) {
-    				mount_component(switch_instance, section, null);
-    			}
-
-    			current = true;
-    		},
-    		p: function update(ctx, dirty) {
-    			const switch_instance_changes = {};
-
-    			if (!updating_data && dirty & /*records*/ 1) {
-    				updating_data = true;
-    				switch_instance_changes.data = /*records*/ ctx[0];
-    				add_flush_callback(() => updating_data = false);
-    			}
-
-    			if (switch_value !== (switch_value = Datatable_partial)) {
-    				if (switch_instance) {
-    					group_outros();
-    					const old_component = switch_instance;
-
-    					transition_out(old_component.$$.fragment, 1, 0, () => {
-    						destroy_component(old_component, 1);
-    					});
-
-    					check_outros();
-    				}
-
-    				if (switch_value) {
-    					switch_instance = new switch_value(switch_props(ctx));
-    					binding_callbacks.push(() => bind(switch_instance, "data", switch_instance_data_binding));
-    					create_component(switch_instance.$$.fragment);
-    					transition_in(switch_instance.$$.fragment, 1);
-    					mount_component(switch_instance, section, null);
-    				} else {
-    					switch_instance = null;
-    				}
-    			} else if (switch_value) {
-    				switch_instance.$set(switch_instance_changes);
-    			}
-    		},
-    		i: function intro(local) {
-    			if (current) return;
-    			if (switch_instance) transition_in(switch_instance.$$.fragment, local);
-    			current = true;
-    		},
-    		o: function outro(local) {
-    			if (switch_instance) transition_out(switch_instance.$$.fragment, local);
-    			current = false;
     		},
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(section);
-    			if (switch_instance) destroy_component(switch_instance);
     		}
     	};
 
@@ -9737,7 +9685,7 @@ var app = (function () {
     		p: function update(ctx, [dirty]) {
     			const module_changes = {};
 
-    			if (dirty & /*$$scope, records*/ 17) {
+    			if (dirty & /*$$scope*/ 8) {
     				module_changes.$$scope = { dirty, ctx };
     			}
 
@@ -9778,8 +9726,8 @@ var app = (function () {
 
     	// Fetch 
     	onMount(async () => {
-    		$$invalidate(0, records = await client.user.findMany());
-    		$$invalidate(0, records = [...records]);
+    		records = await client.user.findMany();
+    		records = [...records];
     	});
 
     	const writable_props = [];
@@ -9787,11 +9735,6 @@ var app = (function () {
     	Object.keys($$props).forEach(key => {
     		if (!~writable_props.indexOf(key) && key.slice(0, 2) !== "$$") console.warn(`<User_page> was created with unknown prop '${key}'`);
     	});
-
-    	function switch_instance_data_binding(value) {
-    		records = value;
-    		$$invalidate(0, records);
-    	}
 
     	$$self.$capture_state = () => ({
     		formatDate,
@@ -9807,14 +9750,14 @@ var app = (function () {
     	});
 
     	$$self.$inject_state = $$props => {
-    		if ("records" in $$props) $$invalidate(0, records = $$props.records);
+    		if ("records" in $$props) records = $$props.records;
     	};
 
     	if ($$props && "$$inject" in $$props) {
     		$$self.$inject_state($$props.$$inject);
     	}
 
-    	return [records, switch_instance_data_binding];
+    	return [];
     }
 
     class User_page extends SvelteComponentDev {
@@ -11483,7 +11426,7 @@ var app = (function () {
     /* src/app/pages/app/app.page.svelte generated by Svelte v3.32.1 */
     const file$e = "src/app/pages/app/app.page.svelte";
 
-    // (37:1) <section slot="webnav">
+    // (35:1) <section slot="webnav">
     function create_webnav_slot$1(ctx) {
     	let section;
     	let webnav;
@@ -11496,7 +11439,7 @@ var app = (function () {
     			create_component(webnav.$$.fragment);
     			attr_dev(section, "slot", "webnav");
     			attr_dev(section, "class", "svelte-1yk66ci");
-    			add_location(section, file$e, 36, 1, 644);
+    			add_location(section, file$e, 34, 1, 579);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, section, anchor);
@@ -11522,14 +11465,14 @@ var app = (function () {
     		block,
     		id: create_webnav_slot$1.name,
     		type: "slot",
-    		source: "(37:1) <section slot=\\\"webnav\\\">",
+    		source: "(35:1) <section slot=\\\"webnav\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (41:1) <section slot="mobnav">
+    // (39:1) <section slot="mobnav">
     function create_mobnav_slot$1(ctx) {
     	let section;
     	let img;
@@ -11541,9 +11484,9 @@ var app = (function () {
     			img = element("img");
     			if (img.src !== (img_src_value = "img/logo.png")) attr_dev(img, "src", img_src_value);
     			attr_dev(img, "alt", "app logo");
-    			add_location(img, file$e, 41, 2, 728);
+    			add_location(img, file$e, 39, 2, 663);
     			attr_dev(section, "slot", "mobnav");
-    			add_location(section, file$e, 40, 1, 702);
+    			add_location(section, file$e, 38, 1, 637);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, section, anchor);
@@ -11558,14 +11501,14 @@ var app = (function () {
     		block,
     		id: create_mobnav_slot$1.name,
     		type: "slot",
-    		source: "(41:1) <section slot=\\\"mobnav\\\">",
+    		source: "(39:1) <section slot=\\\"mobnav\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (45:1) <section slot="aside">
+    // (43:1) <section slot="aside">
     function create_aside_slot$1(ctx) {
     	let section;
     	let aside;
@@ -11577,7 +11520,7 @@ var app = (function () {
     			section = element("section");
     			create_component(aside.$$.fragment);
     			attr_dev(section, "slot", "aside");
-    			add_location(section, file$e, 44, 1, 782);
+    			add_location(section, file$e, 42, 1, 717);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, section, anchor);
@@ -11603,14 +11546,14 @@ var app = (function () {
     		block,
     		id: create_aside_slot$1.name,
     		type: "slot",
-    		source: "(45:1) <section slot=\\\"aside\\\">",
+    		source: "(43:1) <section slot=\\\"aside\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (49:1) <section slot="header">
+    // (47:1) <section slot="header">
     function create_header_slot$1(ctx) {
     	let section;
 
@@ -11620,7 +11563,7 @@ var app = (function () {
     			section.textContent = "App";
     			attr_dev(section, "slot", "header");
     			attr_dev(section, "class", "svelte-1yk66ci");
-    			add_location(section, file$e, 48, 1, 838);
+    			add_location(section, file$e, 46, 1, 773);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, section, anchor);
@@ -11634,14 +11577,14 @@ var app = (function () {
     		block,
     		id: create_header_slot$1.name,
     		type: "slot",
-    		source: "(49:1) <section slot=\\\"header\\\">",
+    		source: "(47:1) <section slot=\\\"header\\\">",
     		ctx
     	});
 
     	return block;
     }
 
-    // (53:1) <section slot="main" >
+    // (51:1) <section slot="main" >
     function create_main_slot$1(ctx) {
     	let section;
     	let switch_instance;
@@ -11677,7 +11620,7 @@ var app = (function () {
     			section = element("section");
     			if (switch_instance) create_component(switch_instance.$$.fragment);
     			attr_dev(section, "slot", "main");
-    			add_location(section, file$e, 52, 1, 882);
+    			add_location(section, file$e, 50, 1, 817);
     		},
     		m: function mount(target, anchor) {
     			insert_dev(target, section, anchor);
@@ -11741,14 +11684,14 @@ var app = (function () {
     		block,
     		id: create_main_slot$1.name,
     		type: "slot",
-    		source: "(53:1) <section slot=\\\"main\\\" >",
+    		source: "(51:1) <section slot=\\\"main\\\" >",
     		ctx
     	});
 
     	return block;
     }
 
-    // (35:0) <Module>
+    // (33:0) <Module>
     function create_default_slot$5(ctx) {
     	let t0;
     	let t1;
@@ -11783,7 +11726,7 @@ var app = (function () {
     		block,
     		id: create_default_slot$5.name,
     		type: "slot",
-    		source: "(35:0) <Module>",
+    		source: "(33:0) <Module>",
     		ctx
     	});
 
@@ -11864,8 +11807,7 @@ var app = (function () {
 
     	// Fetch 
     	onMount(async () => {
-    		$$invalidate(0, records = await client.app.findMany());
-    		$$invalidate(0, records = [...records]);
+    		
     	});
 
     	const writable_props = [];

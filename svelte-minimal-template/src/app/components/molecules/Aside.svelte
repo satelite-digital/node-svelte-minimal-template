@@ -95,6 +95,9 @@ export let style = "";
                 <p>{link.display}</p>
             </li>
             {/each}
+            <li on:click={()=>{ push(`#/logout`) }}>
+                <p>Log out</p>
+            </li>
         </ul>
         
         

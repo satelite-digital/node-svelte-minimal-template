@@ -15,8 +15,6 @@
 	
 	// Fetch 
 	onMount(async ()=>{
-		records = await client.app.findMany()
-		records = [...records]
 	})
 
 </script>

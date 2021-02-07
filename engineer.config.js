@@ -75,6 +75,7 @@ const main = async ()=>{
           optional : true
         }
       })
+      config.data.schema[schema].isUser = true
     }
   }
   

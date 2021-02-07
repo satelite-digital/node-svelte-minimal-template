@@ -51,7 +51,7 @@ section[slot="webnav"]{
 	</section>
 
 	<section slot="main" >
-		<svelte:component this={DatatablePartial} bind:data={records}></svelte:component>
+		Display another partial component for users
   	</section>
 
 </Module>
