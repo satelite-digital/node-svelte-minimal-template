@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+{{#if useSQLite}}
+datasource db {
+  provider = "sqlite"
+  url      = "file:./../tmp/instantcode.db"
+}
+{{else}}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+{{/if}}
+
+{{#each schema}}
+model {{capitalized}} {
+  id          String   @id @default(uuid())
+  {{#each fields}}
+  {{id}}        {{type}}{{#if options.optional}}?{{else}}{{/if}}  {{#if options.default}}@default({{{options.default}}}){{/if}}
+  {{/each}}
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+{{#each this.parents}}
+  {{{this.id}}}Id String{{#if this.options.optional}}?{{/if}}
+  {{{this.id}}}  {{this.capitalized}}{{#if this.options.optional}}?{{/if}}  @relation({{#if this.options.namedRelation}}"{{{this.id}}}", {{/if}}fields: [{{this.id}}Id], references: [id])
+{{/each}}
+{{#each this.children}}
+  {{#if this.options.namedRelation}}{{{this.options.namedRelation}}} {{this.capitalized}}[] @relation("{{{this.id}}}"){{else}}{{{this.id}}} {{this.capitalized}}[]{{/if}}
+{{/each}}
+}
+{{/each}}

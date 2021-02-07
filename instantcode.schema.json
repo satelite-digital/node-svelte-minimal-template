@@ -1,0 +1,54 @@
+{
+    "title":"Minimal svelte template",
+    "useSQLite" : false,
+    "schema":[
+        {
+            "id":"user",
+            "fields":[
+                {
+                    "id":"email",
+                    "type":"String",
+                    "options" : {
+                        "optional" : true
+                    }
+                }
+            ],
+            "children" : [
+                {
+                    "id" : "app"
+                }
+            ],
+            "options" : {
+                "isUser" : true
+            }
+        },
+        {
+            "id":"app",
+            "fields":[
+                {
+                    "id":"text",
+                    "type":"String"
+                },
+                {
+                    "id":"isPublished",
+                    "type":"Boolean",
+                    "options" : {
+                        "default" : "\"false\""
+                    }
+                },
+                {
+                    "id":"detail",
+                    "type":"Json",
+                    "options" : {
+                        "optional" : true
+                    }
+                }
+            ],
+            "parents" : [
+                {
+                    "id" : "user"
+                }
+            ]
+        }
+    ]
+}

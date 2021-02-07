@@ -1,0 +1,5 @@
+{ 
+            "files" : ["./svelte-minimal-template/src/app/pages/user/user.page.svelte","./svelte-minimal-template/src/app/pages/app/app.page.svelte","./svelte-minimal-template/src/app/pages/user/datatable.partial.svelte","./svelte-minimal-template/src/app/pages/app/datatable.partial.svelte","./svelte-minimal-template/src/app/services/client/user.service.js","./svelte-minimal-template/src/app/services/client/app.service.js","./svelte-minimal-template/src/app/services/client/index.js","./svelte-minimal-template/src/app/pages/index.js","./svelte-minimal-template/src/app/routes/index.js","./svelte-minimal-template/src/app/components/molecules/Aside.svelte","./node-minimal-template/src/services/user.js","./node-minimal-template/src/services/app.js","./node-minimal-template/src/routes/user.js","./node-minimal-template/src/routes/app.js","./node-minimal-template/src/app.js","./node-minimal-template/prisma/schema.prisma"],
+            "buildAt" : "2/6/2021, 9:17:23 PM",
+            "buildName" : "latest"
+        }
